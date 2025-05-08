@@ -5,7 +5,8 @@ from models.schemas.user import UserCreateModel
 from database.crud.user import UserCRUD
 from database.crud.post import PostCRUD,FileStorage
 from appwrite.services.databases import Databases
-from fastapi import FastAPI,UploadFile,File,HTTPException
+from fastapi import FastAPI,UploadFile,File,HTTPException,Form
+
 import sys
 from pathlib import Path
 import os
@@ -14,7 +15,7 @@ sys.path.append(str(Path(__file__).parent.parent.parent))
 
 
 app = FastAPI(
-    title="mark API",
+    title="FastAPI",
     description="API user <-> posts interaction",
     docs_url="/"
 )
@@ -75,22 +76,34 @@ async def create_post(post_data: PostCreateModel):
     return result
 
 @app.patch('/posts/{post_id}')
-async def Update_post(post_id:str,update_data:PostCreateModel,file: UploadFile):
+async def Update_post(
+    post_id: str,
+    content: str = Form(...),  
+    user_id: str = Form(...),  
+    file: UploadFile = File(None)  
+):
     data = {
-        'content': update_data.content,
-        'user_id': update_data.user_id
+        'content': content,
+        'user_id': user_id
     }
+    
     if file:
         try:
             file_path = f"{file.filename}"
-            with open(file_path,"wb") as buffer:
+            with open(file_path, "wb") as buffer:
                 buffer.write(await file.read())
 
             file_info = file_storage.upload_file(file_path)
-            data.update({'file_id': file_info['$id'], 'file_name': file_info['name']})
+            data.update({
+                'file_id': file_info['$id'],
+                'file_name': file_info['name']
+            })
             Path(file_path).unlink(missing_ok=True)
         except Exception as e:
-            raise HTTPException(status_code=500,detail='File upload failed')
+            raise HTTPException(
+                status_code=500,
+                detail=f'File upload failed: {str(e)}'
+            )
 
     result = post_crud.update_post(post_id=post_id, data=data)
     return result
@@ -130,6 +143,14 @@ async def delete_bucket(bucket_id: str):
         return result
     except Exception as e:
         raise HTTPException(status_code=500,detail=str(e))
+@app.delete('/db-delete/{db_id}')
+async def delete_database(db_id: str):
+    try:
+        db = Databases(client)  
+        db.delete(database_id=db_id)
+        return None  
+    except Exception as e:
+        raise HTTPException(status_code=204,detail=str(e))
 
 
 

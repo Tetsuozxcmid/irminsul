@@ -1,5 +1,6 @@
 import sys
 from pathlib import Path
+
 sys.path.append(str(Path(__file__).parent.parent.parent))
 
 from appwrite.services.databases import Databases
@@ -12,6 +13,17 @@ class DatabaseInitializer:
         self.db = Databases(client)
         self.db_id = None
         self.collections = {}  
+
+    def delete_db(self, db_id):
+        try:
+            result = self.db.delete(database_id=db_id)
+            if self.db_id == db_id:
+                self.db_id = None
+                self.collections = {}
+            return result
+        except Exception as e:
+            print(f"Ошибка при удалении базы данных {db_id}: {str(e)}")
+            
 
     def create_database(self, name):
         self.db_id = secrets.token_hex(8)
