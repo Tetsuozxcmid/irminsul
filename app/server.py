@@ -120,4 +120,16 @@ async def create_file_post(content: str,user_id: str,file: UploadFile):
             return result
     except Exception as e:
         raise HTTPException(status_code=500,detail=str(e))
+    
+
+@app.delete('/bucket/{bucket_id}',status_code=204)
+async def delete_bucket(bucket_id: str):
+    try:
+        result = file_storage.delete_bucket(bucket_id=bucket_id)
+
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500,detail=str(e))
+
+
 

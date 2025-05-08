@@ -3,17 +3,20 @@ from appwrite.services.storage import Storage
 from appwrite.input_file import InputFile
 from pathlib import Path
 from typing import Optional, Dict, List
-
+from config import settings
 import secrets
 
 class FileStorage:
     def __init__(self,client):
         self.storage = Storage(client)
-        self.bucket_id = '7a9dc087f1fa3d53'
+        self.bucket_id = settings.BUCKET_ID
 
     def create_bucket(self,name: str):
         self.bucket_id  = secrets.token_hex(8)
         return self.storage.create_bucket(bucket_id=self.bucket_id,name=name)
+    
+    def delete_bucket(self,bucket_id: str):
+        return self.storage.delete_bucket(bucket_id=bucket_id)
     
     def upload_file(self,file_path: str):
         file = InputFile.from_path(file_path)
@@ -58,6 +61,7 @@ class PostCRUD:
     
     def delete_post(self,post_id: str):
         return self.db.delete_document(database_id=self.db_id,collection_id=self.collection_id,document_id=post_id)
+    
     
     
     def list_posts(self) -> Dict:
