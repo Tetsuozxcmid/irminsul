@@ -1,5 +1,5 @@
 from appwrite.client import Client
-from app.config import APPWRITE_ID_KEY,APPWRITE_API_KEY
+from config import APPWRITE_ID_KEY,APPWRITE_API_KEY
 
 client = Client()
 
