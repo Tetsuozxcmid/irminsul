@@ -58,7 +58,7 @@ async def create_post(
             Path(file_path).unlink(missing_ok=True)
         except Exception as e:
             raise HTTPException(
-
+                status_code=500,
                 detail=f'File upload failed: {str(e)}'
             )
 
