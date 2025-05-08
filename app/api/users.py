@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from database.crud.user import UserCRUD
 from models.schemas.user import UserCreateModel
 from config import settings

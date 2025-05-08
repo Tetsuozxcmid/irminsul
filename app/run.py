@@ -1,6 +1,4 @@
-from fastapi import FastAPI, Request
-from appwrite.client import Client
-from config import settings
+from fastapi import FastAPI
 from api.storage import router as storage_router
 from api.db import router as db_router
 from api.posts import router as posts_router

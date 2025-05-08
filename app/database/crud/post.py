@@ -2,8 +2,7 @@ from appwrite.services.databases import Databases
 from appwrite.services.storage import Storage
 from appwrite.input_file import InputFile
 from database.crud.user import UserCRUD
-from pathlib import Path
-from typing import Optional, Dict, List
+from typing import  Dict
 from config import settings
 import secrets
 

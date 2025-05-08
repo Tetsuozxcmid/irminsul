@@ -8,7 +8,7 @@ async def log_requests(request: Request, call_next):
     start_time = datetime.now()
     
     response = await call_next(request)
-    
+
     process_time = (datetime.now() - start_time).total_seconds() * 1000
     
     logger.info(
