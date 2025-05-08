@@ -7,7 +7,6 @@ from api.posts import router as posts_router
 from api.users import router as users_router
 
 
-
 app = FastAPI(
     title="FastAPI",
     description="API user <-> posts interaction",

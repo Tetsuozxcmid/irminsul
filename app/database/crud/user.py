@@ -3,7 +3,6 @@ from typing import Optional, Dict, List
 import secrets
 
 
-
 class UserCRUD:
     def __init__(self, db: Databases, db_id: str, collection_id: str):
         self.db = db
@@ -21,13 +20,12 @@ class UserCRUD:
     def get_user(self, user_id: str) -> Dict:
         return self.db.get_document(database_id=self.db_id, collection_id=self.collection_id, document_id=user_id)
 
-    def update_user(self,user_id: str,data):
-        return self.db.update_document(database_id=self.db_id,collection_id=self.collection_id,document_id=user_id,data=data)
-    
-    def delete_user(self,user_id: str):
-        return self.db.delete_document(database_id=self.db_id,collection_id=self.collection_id,document_id=user_id)
-    
-    
+    def update_user(self, user_id: str, data):
+        return self.db.update_document(database_id=self.db_id, collection_id=self.collection_id, document_id=user_id, data=data)
+
+    def delete_user(self, user_id: str):
+        return self.db.delete_document(database_id=self.db_id, collection_id=self.collection_id, document_id=user_id)
+
     def list_users(self) -> Dict:
 
         return self.db.list_documents(

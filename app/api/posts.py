@@ -13,16 +13,19 @@ post_crud = PostCRUD(
     db=db,
     db_id=settings.DB_ID,
     collection_id=settings.POSTS_COLLECTION_ID,
-    storage=file_storage  
+    storage=file_storage
 )
+
 
 @router.get('/')
 async def get_all_posts():
     return post_crud.list_posts()
 
+
 @router.post('/', status_code=201)
 async def create_post(content: str = Form(...), user_id: str = Form(...)):
     return post_crud.create_post(content=content, user_id=user_id)
+
 
 @router.patch('/{post_id}')
 async def update_post(
@@ -46,6 +49,7 @@ async def update_post(
         except Exception as e:
             raise HTTPException(500, detail=f'File upload failed: {str(e)}')
     return post_crud.update_post(post_id=post_id, data=data)
+
 
 @router.delete('/{post_id}', status_code=204)
 async def delete_post(post_id: str):

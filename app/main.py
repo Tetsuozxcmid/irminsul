@@ -8,5 +8,3 @@ client = (client
           .set_project(settings.APPWRITE_ID_KEY)
           .set_key(settings.APPWRITE_API_KEY)
           )
-
-

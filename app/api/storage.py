@@ -7,6 +7,7 @@ router = APIRouter(prefix="/storage", tags=["Storage"])
 
 file_storage = FileStorage(client)
 
+
 @router.post('/upload')
 async def upload_file(file: UploadFile = File(...)):
     try:
@@ -18,7 +19,8 @@ async def upload_file(file: UploadFile = File(...)):
         return result
     except Exception as e:
         raise HTTPException(500, detail=str(e))
-    
+
+
 @router.delete('/bucket/{bucket_id}', status_code=204)
 async def delete_bucket(bucket_id: str):
     try:
