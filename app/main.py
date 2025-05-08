@@ -9,4 +9,4 @@ client = (client
           .set_key(settings.APPWRITE_API_KEY)
           )
 
-print(client)
+
