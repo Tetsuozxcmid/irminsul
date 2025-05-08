@@ -20,6 +20,46 @@
     Пользователь может загружать посты с файлами , удалять, обновлять их
       -   user <=> post `по айдишнику`
 
+           ## Пример в Swagger UI
+          - /users/ create user ( создаем юзера вписываем все кроме post_id (его делаем пустым) )
+          - /users/ get all users ( смотрим на нашего созданного юзера и копируем его "$id"
+          - переходи в /posts/ create post ( заполняем поля ( контент ( описание), в user_id вставляем ранее скопированный айдишник, выбираем файл ( до 50 мб) и выполняем)
+             
+             - получаем такой результат
+               
+          ```
+            curl -X 'POST' \
+          'http://127.0.0.1:8001/posts/' \
+          -H 'accept: application/json' \
+          -H 'Content-Type: multipart/form-data' \
+          -F 'content=Описание' \
+          -F 'user_id=dd7ba256c05cd623' \
+          -F 'file=@Test.txt;type=text/plain'
+          ```
+          
+          - /posts/ get all posts ( и проверяем по айдишнику юзера привязался ли к нему пост )
+             
+              - id юзера ```dd7ba256c05cd623```
+                
+                  - Response body
+      ```
+                      {
+      "content": "азазазазазаза",
+      "user_id": "dd7ba256c05cd623",
+      "file_id": "e38f135b6b21f176",
+      "file_name": "ваня.txt",
+      "$id": "82d1b5f99a2acfe5",
+      "$createdAt": "2025-05-08T23:21:19.722+00:00",
+      "$updatedAt": "2025-05-08T23:21:19.722+00:00",
+      "$permissions": [],
+      "$databaseId": "0ac89c09a3b4f5b3",
+      "$collectionId": "5897df6722223290"
+    }
+    ```
+            
+             
+             
+
 ## Установка
 1. ```git clone <url>```
    
