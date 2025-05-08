@@ -1,6 +1,7 @@
 from appwrite.services.databases import Databases
 from appwrite.services.storage import Storage
 from appwrite.input_file import InputFile
+from database.crud.user import UserCRUD
 from pathlib import Path
 from typing import Optional, Dict, List
 from config import settings
@@ -31,11 +32,12 @@ class FileStorage:
 
 
 class PostCRUD:
-    def __init__(self, db: Databases, db_id: str, collection_id: str, storage: FileStorage):
+    def __init__(self, db: Databases, db_id: str, collection_id: str, storage: FileStorage, user_crud: UserCRUD):
         self.db = db
         self.storage = storage
         self.db_id = db_id
         self.collection_id = collection_id
+        self.user_crud = user_crud
 
     def create_file_post(self, content, user_id, file_path):
         file_info = self.storage.upload_file(file_path)
@@ -47,12 +49,16 @@ class PostCRUD:
         }
         return self.db.create_document(database_id=self.db_id, collection_id=self.collection_id, document_id=secrets.token_hex(8), data=data)
 
-    def create_post(self, content, user_id) -> Dict:
-        data = {
-            "content": content,
-            'user_id': user_id
-        }
-        return self.db.create_document(database_id=self.db_id, collection_id=self.collection_id, document_id=secrets.token_hex(8), data=data)
+    def create_post(self, data: dict) -> Dict:
+        if not self.user_crud.user_exists(data['user_id']):
+            raise ValueError(f"User {data['user_id']} does not exist")
+
+        return self.db.create_document(
+            database_id=self.db_id,
+            collection_id=self.collection_id,
+            document_id=secrets.token_hex(8),
+            data=data
+        )
 
     def get_post(self, post_id: str) -> Dict:
         return self.db.get_document(database_id=self.db_id, collection_id=self.collection_id, document_id=post_id)

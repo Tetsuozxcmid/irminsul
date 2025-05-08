@@ -1,6 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 from pathlib import Path
 from database.crud.post import PostCRUD
+from database.crud.user import UserCRUD
 from config import settings
 from appwrite.services.databases import Databases
 from main import client
@@ -9,11 +10,19 @@ from api.storage import file_storage
 router = APIRouter(prefix="/posts", tags=["Posts"])
 
 db = Databases(client)
+
+user_crud = UserCRUD(
+    db=db,
+    db_id=settings.DB_ID,
+    collection_id=settings.USERS_COLLECTION_ID
+)
+
 post_crud = PostCRUD(
     db=db,
     db_id=settings.DB_ID,
     collection_id=settings.POSTS_COLLECTION_ID,
-    storage=file_storage
+    storage=file_storage,
+    user_crud=user_crud
 )
 
 
@@ -23,8 +32,38 @@ async def get_all_posts():
 
 
 @router.post('/', status_code=201)
-async def create_post(content: str = Form(...), user_id: str = Form(...)):
-    return post_crud.create_post(content=content, user_id=user_id)
+async def create_post(
+    content: str = Form(...),
+    user_id: str = Form(...),
+    file: UploadFile | None = File(None)
+):
+    data = {
+        'content': content,
+        'user_id': user_id,
+        'file_id': '',
+        'file_name': ''
+    }
+
+    if file and file.filename:
+        try:
+            file_path = f"{file.filename}"
+            with open(file_path, "wb") as buffer:
+                buffer.write(await file.read())
+
+            file_info = file_storage.upload_file(file_path)
+            data.update({
+                'file_id': file_info['$id'],
+                'file_name': file_info['name']
+            })
+            Path(file_path).unlink(missing_ok=True)
+        except Exception as e:
+            raise HTTPException(
+
+                detail=f'File upload failed: {str(e)}'
+            )
+
+    result = post_crud.create_post(data=data)
+    return result
 
 
 @router.patch('/{post_id}')

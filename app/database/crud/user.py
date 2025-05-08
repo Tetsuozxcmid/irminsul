@@ -9,6 +9,19 @@ class UserCRUD:
         self.db_id = db_id
         self.collection_id = collection_id
 
+    def add_post_to_user(self, user_id: str, post_id: str) -> Dict:
+        return self.db.update_document(database_id=self.db_id,
+                                       collection_id=self.collection_id,
+                                       document_id=user_id,
+                                       data={'post_id': post_id})
+
+    def user_exists(self, user_id: str) -> bool:
+        try:
+            self.get_user(user_id)
+            return True
+        except:
+            return False
+
     def create_user(self, balance: int, rank: int, post_id: str) -> Dict:
         data = {
             "balance": balance,
