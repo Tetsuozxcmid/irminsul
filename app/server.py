@@ -1,4 +1,4 @@
-from config import DB_ID, USERS_COLLECTION_ID,POSTS_COLLECTION_ID
+from config import settings
 from main import client
 from models.schemas.post import PostCreateModel
 from models.schemas.user import UserCreateModel
@@ -13,26 +13,25 @@ sys.path.append(str(Path(__file__).parent.parent.parent))
 
 app = FastAPI(
     title="mark API",
-    description="API user <-> post interaction",
+    description="API user <-> posts interaction",
     docs_url="/"
 )
 
 
 db = Databases(client)
-DB_ID = DB_ID
-USERS_COLLECTION_ID = USERS_COLLECTION_ID
+
 
 
 user_crud = UserCRUD(
     db=db,
-    db_id=DB_ID,
-    collection_id=USERS_COLLECTION_ID
+    db_id=settings.DB_ID,
+    collection_id=settings.USERS_COLLECTION_ID
 )
 
 post_crud = PostCRUD(
     db=db,
-    db_id=DB_ID,
-    collection_id=POSTS_COLLECTION_ID
+    db_id=settings.DB_ID,
+    collection_id=settings.POSTS_COLLECTION_ID
 )
 
 

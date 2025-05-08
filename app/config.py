@@ -1,10 +1,19 @@
 from os import environ
-from dotenv import load_dotenv
+from pydantic import Field
+from pydantic_settings import BaseSettings,SettingsConfigDict
 
-load_dotenv()
 
-APPWRITE_ID_KEY = environ.get('APPWRITE_ID_KEY')
-APPWRITE_API_KEY = environ.get('APPWRITE_API_KEY')
-DB_ID = environ.get('DB_ID')
-USERS_COLLECTION_ID = environ.get('USERS_COLLECTION_ID')
-POSTS_COLLECTION_ID = environ.get('POSTS_COLLECTION_ID')
+
+
+class AppwriteConfig(BaseSettings):
+
+    APPWRITE_ID_KEY: str 
+    APPWRITE_API_KEY: str 
+    DB_ID: str 
+    USERS_COLLECTION_ID: str
+    POSTS_COLLECTION_ID: str 
+    model_config = SettingsConfigDict(env_file='.env')
+
+
+
+settings = AppwriteConfig()
