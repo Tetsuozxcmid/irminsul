@@ -1,10 +1,12 @@
 ## About
 
   - Использование API `Appwrite` для создания коллекций user,post и атрибутов в которые входят
+    
     - user
       - `id`
       -  balance`(валюта)`
       -  rank `(ранг в сервисе)`
+        
     - post
       - `id` 
       -   content`(описание)` 
@@ -12,18 +14,26 @@
       -   file_id `(айдишник файла)`
       -   file `(загружаемый с помощью InputUpload файл ( в пробной версии appwrite максимум 50мб(указано в сваггере)` 
       -   file_name`(название файла))`
-      -   
+        
+    - file bucket `просто хранилище файлов загруженных` где есть `file_id` `file_name` `file`
+      
     Пользователь может загружать посты с файлами , удалять, обновлять их
       -   user <=> post `по айдишнику`
 
 ## Установка
 1. ```Bash git clone <url>```
-2. ```python -m venv venv```
-3. ```venv/scripts/activate```
-4. ```pip install  -r requirements.txt```
-5. ```python -m app.database.db_manage.py``` - инициализация бд, создание коллекций, атрибутов через кастомный db manager
-6. Получить ключи с сайта appwrite
-7. создать  `.env` файл корне директории проекта и добавить следующие поля ( какие то показываются при ините бд, какие то с appwrite можно взять) :
+   
+3. ```python -m venv venv```
+   
+5. ```venv/scripts/activate```
+   
+7. ```pip install  -r requirements.txt```
+   
+9. ```python -m app.database.db_manage.py``` - инициализация бд, создание коллекций, атрибутов через кастомный db manager
+    
+11. Получить ключи с сайта appwrite
+    
+13. создать  `.env` файл корне директории проекта и добавить следующие поля ( какие то показываются при ините бд, какие то с appwrite можно взять) :
 ```
 APPWRITE_ID_KEY=your-appwrite-id-key
 APPWRITE_API_KEY=your-appwrite-api-key
@@ -36,7 +46,9 @@ BUCKET_ID=your-bucket-id
 9. ```uvicorn run:app --port 8001```
 
 ## Crud операции
+
 - ```Создание бакета( временного хранилища для дальнейшего использования), удаление, обновление```
+  
 ```Python 
 class FileStorage:
     def __init__(self, client):
@@ -61,7 +73,9 @@ class FileStorage:
         return self.storage.list_files(self.bucket_id)
 
 ```
+
 - ```CRUD постов ( создание, удаление, привязка user_id по круду юзера, обновление постов)```
+  
 ```Python
   class PostCRUD:
     def __init__(self, db: Databases, db_id: str, collection_id: str, storage: FileStorage, user_crud: UserCRUD):
@@ -111,7 +125,9 @@ class FileStorage:
 ```
 
 - ```CRUD Юзеров (Создание, обновление, удаление, вывод всех или по айдишнику, проверка есть ли юзер для связи с постами)```
+  
 ```Python
+
 class UserCRUD:
     def __init__(self, db: Databases, db_id: str, collection_id: str):
         self.db = db
