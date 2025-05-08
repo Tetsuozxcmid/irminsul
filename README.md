@@ -21,7 +21,7 @@
       -   user <=> post `по айдишнику`
 
 ## Установка
-1. ```Bash git clone <url>```
+1. ```git clone <url>```
    
 3. ```python -m venv venv```
    
