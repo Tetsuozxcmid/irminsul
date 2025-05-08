@@ -53,7 +53,11 @@ class DatabaseInitializer:
         self.create_collection('posts')
         for name, attr_type, params in [
             ('content', 'string', {'size': 255, 'required': True}),
-            ('user_id', 'string', {'size': 255, 'required': True})
+            ('user_id', 'string', {'size': 255, 'required': True}),
+            ('file_id', 'string', {'size': 255, 'required': True}),
+            ('file_name', 'string', {'size': 255, 'required': True})
+            
+
         ]:
             self.create_attribute('posts', name, attr_type, **params)
     
